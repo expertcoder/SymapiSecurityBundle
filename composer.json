@@ -1,0 +1,19 @@
+{
+  "name": "ExpertCoder/SymapiSecurityBundle",
+  "type": "symfony-bundle",
+  "description": "Symfony 3 Security Bundle utilising LexikJWTAuthenticationBundle",
+  "homepage": "https://github.com/expertcoder/SymapiSecurityBundle",
+  "authors": [
+    {
+      "name": "Samual Anthony",
+      "email": "sam@expertcoder.io"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.3",
+    "lexik/jwt-authentication-bundle": "^1.6"
+  },
+  "autoload": {
+    "psr-4": { "ExpertCoder\\SymapiSecurityBundle\\": "" }
+  }
+}
