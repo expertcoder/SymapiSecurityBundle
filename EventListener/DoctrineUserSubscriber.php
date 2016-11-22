@@ -3,10 +3,10 @@
 namespace ExpertCoder\SymapiSecurityBundle\EventListener;
 
 
-use AppBundle\Entity\User;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use ExpertCoder\SymapiSecurityBundle\Model\SymapiUserInterface;
 use ExpertCoder\SymapiSecurityBundle\Security\UserManager;
 
 class DoctrineUserSubscriber implements EventSubscriber
@@ -27,7 +27,7 @@ class DoctrineUserSubscriber implements EventSubscriber
 	public function prePersist(LifecycleEventArgs $args)
 	{
 		$entity = $args->getEntity();
-		if ($entity instanceof User) { //NOTE: if you want to make this bundle stand alone, you will need to untie it from AppBundle classes
+		if ($entity instanceof SymapiUserInterface) {
 			$this->handleEvent($entity);
 		}
 	}
@@ -35,12 +35,12 @@ class DoctrineUserSubscriber implements EventSubscriber
 	public function preUpdate(PreUpdateEventArgs $args)
 	{
 		$entity = $args->getEntity();
-		if ($entity instanceof User) {
+		if ($entity instanceof SymapiUserInterface) {
 			$this->handleEvent($entity);
 		}
 	}
 
-	private function handleEvent(User $user)
+	private function handleEvent(SymapiUserInterface $user)
 	{
 		//If the plainPassword attribute is set, then assume a new password is been set
 		$plainPassword = $user->getPlainPassword();

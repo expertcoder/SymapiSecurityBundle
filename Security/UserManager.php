@@ -2,9 +2,9 @@
 
 namespace ExpertCoder\SymapiSecurityBundle\Security;
 
-use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
+use ExpertCoder\SymapiSecurityBundle\Model\SymapiUserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use ExpertCoder\SymapiSecurityBundle\Exception\UserNotActiveException;
+use Doctrine\ORM\EntityRepository;
 
 class UserManager
 {
@@ -30,16 +31,17 @@ class UserManager
 		$this->userPasswordEncoder = $userPasswordEncoder;
 	}
 
-	public function getAuthToken(UserInterface $user)
+	public function getAuthToken(SymapiUserInterface $user)
 	{
 		$token = $this->jwtEncoder->encode(['id' => $user->getId() ]);
 
 		return $token;
 	}
 
-	public function getUserByCredentials(EntityManager $em, $email, $password)
+	public function getUserByCredentials(EntityRepository $repo, $email, $password)
 	{
-		$user = $em->getRepository('AppBundle:User')->findOneByEmail($email); //NOTE: if you wanted to make this bundle stand alone will need to remove dependency on the AppBundle
+		//TODO - This bundle is still slightly coupled with the main application bundle here, because it assumes $repo->findOneByEmail() is going to be available
+		$user = $repo->findOneByEmail($email);
 
 		if (!$user) {
 			throw new UsernameNotFoundException();
@@ -58,7 +60,7 @@ class UserManager
 		return $user;
 	}
 
-	public function generateEncodedUserPassword(User $user, $plainPassword)
+	public function generateEncodedUserPassword(SymapiUserInterface $user, $plainPassword)
 	{
 		return $this->userPasswordEncoder->encodePassword($user, $plainPassword);
 
