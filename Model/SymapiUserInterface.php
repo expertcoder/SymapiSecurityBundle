@@ -12,7 +12,7 @@ interface SymapiUserInterface extends UserInterface
 
 	public function getPlainPassword();
 
-	public function setEncodedPassword();
+	public function setEncodedPassword($encodedPassword);
 
 
 }
