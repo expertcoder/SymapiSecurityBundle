@@ -33,14 +33,19 @@ class UserManager
 
 	public function getAuthToken(SymapiUserInterface $user)
 	{
-		$token = $this->jwtEncoder->encode(['id' => $user->getId() ]);
+		$token = $this->jwtEncoder->encode(
+						[
+							'id' => $user->getId(),
+							'class' => get_class($user),
+						]
+						);
 
 		return $token;
 	}
 
 	public function getUserByCredentials(EntityRepository $repo, $email, $password)
 	{
-		//TODO - This bundle is still slightly coupled with the main application bundle here, because it assumes $repo->findOneByEmail() is going to be available
+		//TODO - This bundle is still coupled with the main application bundle here, because it assumes $repo->findOneByEmail() is going to be available
 		$user = $repo->findOneByEmail($email);
 
 		if (!$user) {

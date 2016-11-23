@@ -43,6 +43,8 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
+		//NOTE: Not using the userProvider here. Refactor this?
+
         $data = $this->jwtEncoder->decode($credentials);
 
         if ($data === false) {
@@ -50,18 +52,22 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
         }
 
         $id = $data['id'];
+        $class = $data['class'];
 
-		//TODO - this is still coupled to the main application bundle.
-        return $this->em
-            ->getRepository('AppBundle:User')
-            ->findOneById($id);
+        if ( $user = $this->em
+            ->getRepository($class)
+            ->findOneById($id) ) {
+			return $user;
+		}
+
+		return null;
     }
 
     
     
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return true;
+		return true;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
