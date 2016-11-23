@@ -51,6 +51,7 @@ class JwtTokenAuthenticator extends AbstractGuardAuthenticator
 
         $id = $data['id'];
 
+		//TODO - this is still coupled to the main application bundle.
         return $this->em
             ->getRepository('AppBundle:User')
             ->findOneById($id);
